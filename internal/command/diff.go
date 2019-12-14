@@ -1,6 +1,7 @@
 package command
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -23,7 +24,7 @@ const (
 	defaultFzfBindOption = "ctrl-k:kill-line,ctrl-alt-t:toggle-preview,ctrl-alt-n:preview-down,ctrl-alt-p:preview-up,ctrl-alt-v:preview-page-down"
 
 	fzfPreviewCommand = "git diff --color {{.objectRange}} {{.path}}"
-	defaultFzfOption  = "--inline-info --ansi --preview '$GIT_FZF_FZF_PREVIEW_OPTION' --bind $GIT_FZF_FZF_BIND_OPTION"
+	defaultFzfOption  = "--multi --ansi --inline-info --layout reverse --preview '$GIT_FZF_FZF_PREVIEW_OPTION' --preview-window down:70% --bind $GIT_FZF_FZF_BIND_OPTION"
 )
 
 var (
@@ -134,7 +135,15 @@ func (c diffCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr
 		}
 		return fmt.Errorf("failed to run the command %s: %w", command, err)
 	}
-	if _, err := ioOut.Write(out); err != nil {
+	lineSeparator := "\n"
+	lines := strings.Split(strings.TrimSpace(string(out)), lineSeparator)
+	filePaths := make([]string, len(lines))
+	for i, line := range lines {
+		fields := strings.Fields(line)
+		filePath := strings.TrimSpace(fields[1])
+		filePaths[i] = filePath
+	}
+	if _, err := ioOut.Write(bytes.NewBufferString(strings.Join(filePaths, lineSeparator)).Bytes()); err != nil {
 		return fmt.Errorf("failed to output the result: %w", err)
 	}
 	return nil

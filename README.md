@@ -34,5 +34,5 @@ Flags:
     * Default: `ctrl-k:kill-line,ctrl-alt-t:toggle-preview,ctrl-alt-n:preview-down,ctrl-alt-p:preview-up,ctrl-alt-v:preview-page-down`
 * `GIT_FZF_FZF_OPTION`
     * The entire option for fzf. This option may use `GIT_FZF_FZF_BIND_OPTION` environment variable.
-    * Default: `--inline-info --preview '$GIT_FZF_FZF_PREVIEW_OPTION' --bind $GIT_FZF_FZF_BIND_OPTION`
+    * Default: `--multi --ansi --inline-info --layout reverse --preview '$GIT_FZF_FZF_PREVIEW_OPTION' --preview-window down:70% --bind $GIT_FZF_FZF_BIND_OPTION`
     * `$GIT_FZF_FZF_PREVIEW_OPTION` is replaced with preview command. This cannot be injected by environment variable `GIT_FZF_FZF_PREVIEW_OPTION`.

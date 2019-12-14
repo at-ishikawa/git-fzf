@@ -38,7 +38,7 @@ func TestGetFzfOption(t *testing.T) {
 		{
 			name:           "no env vars",
 			previewCommand: "git diff {{1}}",
-			want:           fmt.Sprintf("--inline-info --ansi --preview '%s' --bind %s", "git diff {{1}}", defaultFzfBindOption),
+			want:           fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff {{1}}", defaultFzfBindOption),
 		},
 		{
 			name:           "all correct env vars",
@@ -102,7 +102,7 @@ func TestNewGetCommand(t *testing.T) {
 			fzfQuery:   "",
 			want: &diffCli{
 				listOptions: []string{},
-				fzfOption:   fmt.Sprintf("--inline-info --ansi --preview '%s' --bind %s", "git diff --color  {{2}}", defaultFzfBindOption),
+				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff --color  {{2}}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -120,7 +120,7 @@ func TestNewGetCommand(t *testing.T) {
 					"--diff-filter",
 					"A",
 				},
-				fzfOption: fmt.Sprintf("--inline-info --ansi --preview '%s' --bind %s --query config", "git diff --color origin/master {{2}}", defaultFzfBindOption),
+				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git diff --color origin/master {{2}}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -162,7 +162,7 @@ func TestRun(t *testing.T) {
 			"git diff --color --name-status origin/master",
 			fzfOption,
 		), commandLine)
-		return bytes.NewBufferString("M\tREADME.md").Bytes(), nil
+		return bytes.NewBufferString("M\tREADME.md\nA\tLICENSE").Bytes(), nil
 	}
 	defaultWantErr := errors.New("want error")
 	exitErr := exec.ExitError{}
@@ -185,7 +185,7 @@ func TestRun(t *testing.T) {
 			},
 			runCommandWithFzf: defaultRunCommand,
 			wantErr:           nil,
-			wantIO:            "M\tREADME.md",
+			wantIO:            "README.md\nLICENSE",
 			wantIOErr:         "",
 		},
 		{
