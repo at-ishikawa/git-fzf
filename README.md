@@ -3,11 +3,12 @@
 [![GitHub](https://img.shields.io/github/license/at-ishikawa/git-fzf)](https://github.com/at-ishikawa/git-fzf/blob/master/LICENSE)
 [![Go workflow](https://github.com/at-ishikawa/git-fzf/workflows/Go/badge.svg)](https://github.com/at-ishikawa/git-fzf)
 
-## Install
+# Install
 You must install `go >= v1.13` beforehand.
 ```shell script
 $ go get -u github.com/at-ishikawa/git-fzf/cmd/git-fzf
 ```
+
 
 # git fzf diff command
 ## Usage
@@ -23,10 +24,27 @@ Flags:
   -q, --query string   Start the fzf with this query
 ```
 
+
+# git fzf log command
+## Usage
+```shell script
+> git fzf log --help
+git log with fzf
+
+Usage:
+  git-fzf log [<commit>[..<commit>]] [-- <git options>] [flags]
+
+Flags:
+  -h, --help           help for log
+  -q, --query string   Start the fzf with this query
+```
+
+
 # Requirements
 * go (version 1.13)
 * git
 * fzf
+
 
 # Environment variables
 * `GIT_FZF_FZF_BIND_OPTION`

@@ -15,26 +15,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewDiffSubcommand(t *testing.T) {
-	assert.NotNil(t, NewDiffSubcommand())
+func TestNewLogSubcommand(t *testing.T) {
+	assert.NotNil(t, NewLogSubcommand())
 }
 
-func TestNewDiffCommand(t *testing.T) {
+func TestNewLogCommand(t *testing.T) {
 	testCases := []struct {
 		name       string
 		gitOptions []string
 		fzfQuery   string
 		envVars    map[string]string
-		want       *diffCli
+		want       *logCli
 		wantErr    error
 	}{
 		{
 			name:       "no options",
 			gitOptions: []string{},
 			fzfQuery:   "",
-			want: &diffCli{
+			want: &logCli{
 				listOptions: []string{},
-				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff --color  {{2}}", defaultFzfBindOption),
+				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git show --color  {{1}}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -46,13 +46,13 @@ func TestNewDiffCommand(t *testing.T) {
 				"A",
 			},
 			fzfQuery: "config",
-			want: &diffCli{
+			want: &logCli{
 				listOptions: []string{
 					"origin/master",
 					"--diff-filter",
 					"A",
 				},
-				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git diff --color origin/master {{2}}", defaultFzfBindOption),
+				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git show --color origin/master {{1}}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -80,21 +80,21 @@ func TestNewDiffCommand(t *testing.T) {
 					require.NoError(t, os.Setenv(k, v))
 				}
 			}
-			got, gotErr := newDiffCli(tc.gitOptions, tc.fzfQuery)
+			got, gotErr := newLogCli(tc.gitOptions, tc.fzfQuery)
 			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, gotErr)
 		})
 	}
 }
 
-func TestDiffCli_Run(t *testing.T) {
+func TestLogCli_Run(t *testing.T) {
 	fzfOption := "--inline-info"
 	defaultRunCommand := func(ctx context.Context, commandLine string, ioIn io.Reader, ioErr io.Writer) (i []byte, e error) {
 		assert.Equal(t, fmt.Sprintf("%s | fzf %s",
-			"git diff --color --name-status origin/master",
+			"git log --color --oneline origin/master",
 			fzfOption,
 		), commandLine)
-		return bytes.NewBufferString("M\tREADME.md\nA\tLICENSE").Bytes(), nil
+		return bytes.NewBufferString("abc Commit message1\nxyz Commit message2\n").Bytes(), nil
 	}
 	defaultWantErr := errors.New("want error")
 	exitErr := exec.ExitError{}
@@ -102,14 +102,14 @@ func TestDiffCli_Run(t *testing.T) {
 	testCases := []struct {
 		name              string
 		runCommandWithFzf func(ctx context.Context, commandLine string, ioIn io.Reader, ioErr io.Writer) (i []byte, e error)
-		sut               diffCli
+		sut               logCli
 		wantErr           error
 		wantIO            string
 		wantIOErr         string
 	}{
 		{
 			name: "name output",
-			sut: diffCli{
+			sut: logCli{
 				listOptions: []string{
 					"origin/master",
 				},
@@ -117,12 +117,12 @@ func TestDiffCli_Run(t *testing.T) {
 			},
 			runCommandWithFzf: defaultRunCommand,
 			wantErr:           nil,
-			wantIO:            "README.md\nLICENSE",
+			wantIO:            "abc\nxyz",
 			wantIOErr:         "",
 		},
 		{
 			name: "command with fzf error",
-			sut: diffCli{
+			sut: logCli{
 				listOptions: []string{},
 				fzfOption:   fzfOption,
 			},
@@ -135,7 +135,7 @@ func TestDiffCli_Run(t *testing.T) {
 		},
 		{
 			name: "command with fzf exit error (not 130)",
-			sut: diffCli{
+			sut: logCli{
 				listOptions: []string{},
 				fzfOption:   fzfOption,
 			},
