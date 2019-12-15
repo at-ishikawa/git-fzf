@@ -1,6 +1,7 @@
 package command
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"html/template"
@@ -68,4 +69,20 @@ func getFzfOption(previewCommand string) (string, error) {
 		return "", fmt.Errorf("%s has invalid environment variables: %s", envNameFzfOption, strings.Join(invalidEnvVars, ","))
 	}
 	return fzfOption, nil
+}
+
+func writeFzfResult(ioOut io.Writer, out []byte, column int) error {
+	lineSeparator := "\n"
+	lines := strings.Split(strings.TrimSpace(string(out)), lineSeparator)
+	filePaths := make([]string, len(lines))
+	for i, line := range lines {
+		fields := strings.Fields(line)
+		filePath := strings.TrimSpace(fields[column])
+		filePaths[i] = filePath
+	}
+	buf := bytes.NewBufferString(strings.Join(filePaths, lineSeparator) + "\n")
+	if _, err := ioOut.Write(buf.Bytes()); err != nil {
+		return fmt.Errorf("failed to output the result: %w", err)
+	}
+	return nil
 }

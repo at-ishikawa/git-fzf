@@ -1,7 +1,6 @@
 package command
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -80,16 +79,8 @@ func (c stashCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioEr
 		}
 		return fmt.Errorf("failed to run the command %s: %w", command, err)
 	}
-	lineSeparator := "\n"
-	lines := strings.Split(strings.TrimSpace(string(out)), lineSeparator)
-	filePaths := make([]string, len(lines))
-	for i, line := range lines {
-		fields := strings.Fields(line)
-		filePath := strings.TrimSpace(fields[0])
-		filePaths[i] = filePath
-	}
-	if _, err := ioOut.Write(bytes.NewBufferString(strings.Join(filePaths, lineSeparator)).Bytes()); err != nil {
-		return fmt.Errorf("failed to output the result: %w", err)
+	if err := writeFzfResult(ioOut, out, 0); err != nil {
+		return err
 	}
 	return nil
 }

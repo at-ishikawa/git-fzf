@@ -116,7 +116,7 @@ func TestStashCli_Run(t *testing.T) {
 			},
 			runCommandWithFzf: defaultRunCommand,
 			wantErr:           nil,
-			wantIO:            "stash@{0}\nstash@{1}",
+			wantIO:            "stash@{0}\nstash@{1}\n",
 			wantIOErr:         "",
 		},
 		{
