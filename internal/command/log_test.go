@@ -117,7 +117,7 @@ func TestLogCli_Run(t *testing.T) {
 			},
 			runCommandWithFzf: defaultRunCommand,
 			wantErr:           nil,
-			wantIO:            "abc\nxyz",
+			wantIO:            "abc\nxyz\n",
 			wantIOErr:         "",
 		},
 		{

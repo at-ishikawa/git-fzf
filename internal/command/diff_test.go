@@ -117,7 +117,7 @@ func TestDiffCli_Run(t *testing.T) {
 			},
 			runCommandWithFzf: defaultRunCommand,
 			wantErr:           nil,
-			wantIO:            "README.md\nLICENSE",
+			wantIO:            "README.md\nLICENSE\n",
 			wantIOErr:         "",
 		},
 		{

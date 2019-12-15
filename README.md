@@ -3,15 +3,22 @@
 [![GitHub](https://img.shields.io/github/license/at-ishikawa/git-fzf)](https://github.com/at-ishikawa/git-fzf/blob/master/LICENSE)
 [![Go workflow](https://github.com/at-ishikawa/git-fzf/workflows/Go/badge.svg)](https://github.com/at-ishikawa/git-fzf)
 
-# Install
+![git-fzf get demo](doc/demo.gif)
+
+## Install
 You must install `go >= v1.13` beforehand.
 ```shell script
 $ go get -u github.com/at-ishikawa/git-fzf/cmd/git-fzf
 ```
 
+## Sub commands
+* diff: See the list of updated files and diff for each file
+* log: See commit history and the details on each commit
+* stash: See the list of stash and the details on each stash
 
-# git fzf diff
-## Usage
+
+### git fzf diff
+#### Usage
 ```shell script
 > git fzf diff --help
 git diff with fzf
@@ -27,8 +34,8 @@ Global Flags:
 ```
 
 
-# git fzf log
-## Usage
+### git fzf log
+#### Usage
 ```shell script
 > git fzf log --help
 git log with fzf
@@ -44,8 +51,8 @@ Global Flags:
 ```
 
 
-# git fzf stash
-## Usage
+### git fzf stash
+#### Usage
 ```shell script
 > git fzf stash --help
 git stash list with fzf
@@ -61,13 +68,13 @@ Global Flags:
 ```
 
 
-# Requirements
+## Requirements
 * go (version 1.13)
 * git
 * fzf
 
 
-# Environment variables
+## Environment variables
 * `GIT_FZF_FZF_BIND_OPTION`
     * The bind option for fzf
     * Default: `ctrl-k:kill-line,ctrl-alt-t:toggle-preview,ctrl-alt-n:preview-down,ctrl-alt-p:preview-up,ctrl-alt-v:preview-page-down`
