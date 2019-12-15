@@ -22,7 +22,7 @@ const (
 )
 
 func NewDiffSubcommand() *cobra.Command {
-	command := &cobra.Command{
+	return &cobra.Command{
 		Use:   "diff [<commit>[..<commit>]] [-- <git options>]",
 		Short: "git diff with fzf",
 		Args:  cobra.MaximumNArgs(100),
@@ -43,9 +43,6 @@ func NewDiffSubcommand() *cobra.Command {
 			return nil
 		},
 	}
-	flags := command.Flags()
-	flags.StringP("query", "q", "", "Start the fzf with this query")
-	return command
 }
 
 func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {

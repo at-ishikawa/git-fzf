@@ -22,7 +22,7 @@ const (
 )
 
 func NewStashSubcommand() *cobra.Command {
-	command := &cobra.Command{
+	return &cobra.Command{
 		Use:   "stash [-- <git options>]",
 		Short: "git stash list with fzf",
 		Args:  cobra.MaximumNArgs(100),
@@ -43,9 +43,6 @@ func NewStashSubcommand() *cobra.Command {
 			return nil
 		},
 	}
-	flags := command.Flags()
-	flags.StringP("query", "q", "", "Start the fzf with this query")
-	return command
 }
 
 func newStashCli(gitOptions []string, fzfQuery string) (*stashCli, error) {

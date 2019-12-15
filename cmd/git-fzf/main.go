@@ -14,6 +14,9 @@ func main() {
 		Use:   "git-fzf [command]",
 		Short: "git commands with fzf",
 	}
+	globalFlags := cli.PersistentFlags()
+	globalFlags.StringP("query", "q", "", "Start the fzf with this query")
+
 	cli.AddCommand(command.NewDiffSubcommand())
 	cli.AddCommand(command.NewLogSubcommand())
 	cli.AddCommand(command.NewStashSubcommand())
