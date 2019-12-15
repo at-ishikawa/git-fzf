@@ -22,7 +22,7 @@ const (
 )
 
 func NewLogSubcommand() *cobra.Command {
-	command := &cobra.Command{
+	return &cobra.Command{
 		Use:   "log [<commit>[..<commit>]] [-- <git options>]",
 		Short: "git log with fzf",
 		Args:  cobra.MaximumNArgs(100),
@@ -43,9 +43,6 @@ func NewLogSubcommand() *cobra.Command {
 			return nil
 		},
 	}
-	flags := command.Flags()
-	flags.StringP("query", "q", "", "Start the fzf with this query")
-	return command
 }
 
 func newLogCli(gitOptions []string, fzfQuery string) (*logCli, error) {

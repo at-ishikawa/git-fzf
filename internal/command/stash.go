@@ -12,19 +12,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type diffCli struct {
+type stashCli struct {
 	listOptions []string
 	fzfOption   string
 }
 
 const (
-	diffFzfPreviewCommand = "git diff --color {{.objectRange}} {{.path}}"
+	stashFzfPreviewCommand = "git stash show --color -p '{{.stash}}'"
 )
 
-func NewDiffSubcommand() *cobra.Command {
+func NewStashSubcommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "diff [<commit>[..<commit>]] [-- <git options>]",
-		Short: "git diff with fzf",
+		Use:   "stash [-- <git options>]",
+		Short: "git stash list with fzf",
 		Args:  cobra.MaximumNArgs(100),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags := cmd.Flags()
@@ -33,7 +33,7 @@ func NewDiffSubcommand() *cobra.Command {
 				return err
 			}
 
-			cli, err := newDiffCli(args, fzfQuery)
+			cli, err := newStashCli(args, fzfQuery)
 			if err != nil {
 				return err
 			}
@@ -45,15 +45,9 @@ func NewDiffSubcommand() *cobra.Command {
 	}
 }
 
-func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {
-	gitObjectRange := ""
-	if len(gitOptions) > 0 {
-		// gitObjectRange may not have ..<commit>
-		gitObjectRange = gitOptions[0]
-	}
-	previewCommand, err := commandFromTemplate("preview", diffFzfPreviewCommand, map[string]interface{}{
-		"path":        "{{2}}",
-		"objectRange": gitObjectRange,
+func newStashCli(gitOptions []string, fzfQuery string) (*stashCli, error) {
+	previewCommand, err := commandFromTemplate("preview", stashFzfPreviewCommand, map[string]interface{}{
+		"stash": "{{1}}",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("invalid fzf preview command: %w", err)
@@ -67,14 +61,14 @@ func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {
 		fzfOption = fzfOption + " --query " + fzfQuery
 	}
 
-	return &diffCli{
+	return &stashCli{
 		listOptions: gitOptions,
 		fzfOption:   fzfOption,
 	}, nil
 }
 
-func (c diffCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr io.Writer) error {
-	command := fmt.Sprintf("git diff --color --name-status %s | fzf %s", strings.Join(c.listOptions, " "), c.fzfOption)
+func (c stashCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr io.Writer) error {
+	command := fmt.Sprintf("git stash list --format='%%gd %%gs' %s | fzf %s", strings.Join(c.listOptions, " "), c.fzfOption)
 	out, err := runCommandWithFzf(ctx, command, ioIn, ioErr)
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
@@ -91,7 +85,7 @@ func (c diffCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr
 	filePaths := make([]string, len(lines))
 	for i, line := range lines {
 		fields := strings.Fields(line)
-		filePath := strings.TrimSpace(fields[1])
+		filePath := strings.TrimSpace(fields[0])
 		filePaths[i] = filePath
 	}
 	if _, err := ioOut.Write(bytes.NewBufferString(strings.Join(filePaths, lineSeparator)).Bytes()); err != nil {

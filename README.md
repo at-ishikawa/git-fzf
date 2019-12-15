@@ -10,22 +10,24 @@ $ go get -u github.com/at-ishikawa/git-fzf/cmd/git-fzf
 ```
 
 
-# git fzf diff command
+# git fzf diff
 ## Usage
 ```shell script
-$ git fzf diff --help
+> git fzf diff --help
 git diff with fzf
 
 Usage:
   git-fzf diff [<commit>[..<commit>]] [-- <git options>] [flags]
 
 Flags:
-  -h, --help           help for diff
+  -h, --help   help for diff
+
+Global Flags:
   -q, --query string   Start the fzf with this query
 ```
 
 
-# git fzf log command
+# git fzf log
 ## Usage
 ```shell script
 > git fzf log --help
@@ -35,7 +37,26 @@ Usage:
   git-fzf log [<commit>[..<commit>]] [-- <git options>] [flags]
 
 Flags:
-  -h, --help           help for log
+  -h, --help   help for log
+
+Global Flags:
+  -q, --query string   Start the fzf with this query
+```
+
+
+# git fzf stash
+## Usage
+```shell script
+> git fzf stash --help
+git stash list with fzf
+
+Usage:
+  git-fzf stash [-- <git options>] [flags]
+
+Flags:
+  -h, --help   help for stash
+
+Global Flags:
   -q, --query string   Start the fzf with this query
 ```
 
