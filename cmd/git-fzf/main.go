@@ -16,6 +16,7 @@ func main() {
 	}
 	cli.AddCommand(command.NewDiffSubcommand())
 	cli.AddCommand(command.NewLogSubcommand())
+	cli.AddCommand(command.NewStashSubcommand())
 	if err := cli.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
