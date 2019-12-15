@@ -15,6 +15,7 @@ func main() {
 		Short: "git commands with fzf",
 	}
 	cli.AddCommand(command.NewDiffSubcommand())
+	cli.AddCommand(command.NewLogSubcommand())
 	if err := cli.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

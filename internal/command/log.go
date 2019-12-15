@@ -12,19 +12,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type diffCli struct {
+type logCli struct {
 	listOptions []string
 	fzfOption   string
 }
 
 const (
-	diffFzfPreviewCommand = "git diff --color {{.objectRange}} {{.path}}"
+	logFzfPreviewCommand = "git show --color {{.objectRange}} {{.path}}"
 )
 
-func NewDiffSubcommand() *cobra.Command {
+func NewLogSubcommand() *cobra.Command {
 	command := &cobra.Command{
-		Use:   "diff [<commit>[..<commit>]] [-- <git options>]",
-		Short: "git diff with fzf",
+		Use:   "log [<commit>[..<commit>]] [-- <git options>]",
+		Short: "git log with fzf",
 		Args:  cobra.MaximumNArgs(100),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags := cmd.Flags()
@@ -33,7 +33,7 @@ func NewDiffSubcommand() *cobra.Command {
 				return err
 			}
 
-			cli, err := newDiffCli(args, fzfQuery)
+			cli, err := newLogCli(args, fzfQuery)
 			if err != nil {
 				return err
 			}
@@ -48,14 +48,14 @@ func NewDiffSubcommand() *cobra.Command {
 	return command
 }
 
-func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {
+func newLogCli(gitOptions []string, fzfQuery string) (*logCli, error) {
 	gitObjectRange := ""
 	if len(gitOptions) > 0 {
 		// gitObjectRange may not have ..<commit>
 		gitObjectRange = gitOptions[0]
 	}
-	previewCommand, err := commandFromTemplate("preview", diffFzfPreviewCommand, map[string]interface{}{
-		"path":        "{{2}}",
+	previewCommand, err := commandFromTemplate("preview", logFzfPreviewCommand, map[string]interface{}{
+		"path":        "{{1}}",
 		"objectRange": gitObjectRange,
 	})
 	if err != nil {
@@ -70,14 +70,14 @@ func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {
 		fzfOption = fzfOption + " --query " + fzfQuery
 	}
 
-	return &diffCli{
+	return &logCli{
 		listOptions: gitOptions,
 		fzfOption:   fzfOption,
 	}, nil
 }
 
-func (c diffCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr io.Writer) error {
-	command := fmt.Sprintf("git diff --color --name-status %s | fzf %s", strings.Join(c.listOptions, " "), c.fzfOption)
+func (c logCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr io.Writer) error {
+	command := fmt.Sprintf("git log --color --oneline %s | fzf %s", strings.Join(c.listOptions, " "), c.fzfOption)
 	out, err := runCommandWithFzf(ctx, command, ioIn, ioErr)
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
@@ -94,7 +94,7 @@ func (c diffCli) Run(ctx context.Context, ioIn io.Reader, ioOut io.Writer, ioErr
 	filePaths := make([]string, len(lines))
 	for i, line := range lines {
 		fields := strings.Fields(line)
-		filePath := strings.TrimSpace(fields[1])
+		filePath := strings.TrimSpace(fields[0])
 		filePaths[i] = filePath
 	}
 	if _, err := ioOut.Write(bytes.NewBufferString(strings.Join(filePaths, lineSeparator)).Bytes()); err != nil {
