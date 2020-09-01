@@ -51,7 +51,7 @@ func newLogCli(gitOptions []string, fzfQuery string) (*logCli, error) {
 		gitObjectRange = gitOptions[0]
 	}
 	previewCommand, err := commandFromTemplate("preview", logFzfPreviewCommand, map[string]interface{}{
-		"path":        "{{1}}",
+		"path":        "{1}",
 		"objectRange": gitObjectRange,
 	})
 	if err != nil {

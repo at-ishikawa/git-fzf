@@ -46,7 +46,7 @@ func NewStashSubcommand() *cobra.Command {
 
 func newStashCli(gitOptions []string, fzfQuery string) (*stashCli, error) {
 	previewCommand, err := commandFromTemplate("preview", stashFzfPreviewCommand, map[string]interface{}{
-		"stash": "{{1}}",
+		"stash": "{1}",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("invalid fzf preview command: %w", err)

@@ -34,7 +34,7 @@ func TestNewStashCommand(t *testing.T) {
 			fzfQuery:   "",
 			want: &stashCli{
 				listOptions: []string{},
-				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git stash show --color -p '{{1}}'", defaultFzfBindOption),
+				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git stash show --color -p '{1}'", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -50,7 +50,7 @@ func TestNewStashCommand(t *testing.T) {
 					"--diff-filter",
 					"A",
 				},
-				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git stash show --color -p '{{1}}'", defaultFzfBindOption),
+				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git stash show --color -p '{1}'", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},

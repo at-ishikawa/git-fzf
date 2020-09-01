@@ -34,7 +34,7 @@ func TestNewDiffCommand(t *testing.T) {
 			fzfQuery:   "",
 			want: &diffCli{
 				listOptions: []string{},
-				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff --color  {{2}}", defaultFzfBindOption),
+				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff --color  {2}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -52,7 +52,7 @@ func TestNewDiffCommand(t *testing.T) {
 					"--diff-filter",
 					"A",
 				},
-				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git diff --color origin/master {{2}}", defaultFzfBindOption),
+				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git diff --color origin/master {2}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},

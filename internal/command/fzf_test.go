@@ -27,17 +27,17 @@ func TestGetFzfOption(t *testing.T) {
 	}{
 		{
 			name:           "no env vars",
-			previewCommand: "git diff {{1}}",
-			want:           fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff {{1}}", defaultFzfBindOption),
+			previewCommand: "git diff {1}",
+			want:           fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git diff {1}", defaultFzfBindOption),
 		},
 		{
 			name:           "all correct env vars",
-			previewCommand: "git diff {{1}}",
+			previewCommand: "git diff {1}",
 			envVars: map[string]string{
 				envNameFzfOption:     fmt.Sprintf("--preview '$GIT_FZF_FZF_PREVIEW_OPTION' --bind $%s", envNameFzfBindOption),
 				envNameFzfBindOption: "ctrl-k:kill-line",
 			},
-			want: fmt.Sprintf("--preview '%s' --bind %s", "git diff {{1}}", "ctrl-k:kill-line"),
+			want: fmt.Sprintf("--preview '%s' --bind %s", "git diff {1}", "ctrl-k:kill-line"),
 		},
 		{
 			name:           "no env vars",
