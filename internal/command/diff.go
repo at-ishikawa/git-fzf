@@ -51,7 +51,7 @@ func newDiffCli(gitOptions []string, fzfQuery string) (*diffCli, error) {
 		gitObjectRange = gitOptions[0]
 	}
 	previewCommand, err := commandFromTemplate("preview", diffFzfPreviewCommand, map[string]interface{}{
-		"path":        "{{2}}",
+		"path":        "{2}",
 		"objectRange": gitObjectRange,
 	})
 	if err != nil {

@@ -34,7 +34,7 @@ func TestNewLogCommand(t *testing.T) {
 			fzfQuery:   "",
 			want: &logCli{
 				listOptions: []string{},
-				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git show --color  {{1}}", defaultFzfBindOption),
+				fzfOption:   fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s", "git show --color  {1}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
@@ -52,7 +52,7 @@ func TestNewLogCommand(t *testing.T) {
 					"--diff-filter",
 					"A",
 				},
-				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git show --color origin/master {{1}}", defaultFzfBindOption),
+				fzfOption: fmt.Sprintf("--multi --ansi --inline-info --layout reverse --preview '%s' --preview-window down:70%% --bind %s --query config", "git show --color origin/master {1}", defaultFzfBindOption),
 			},
 			wantErr: nil,
 		},
